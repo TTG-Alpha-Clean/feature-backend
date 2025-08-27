@@ -9,7 +9,7 @@ import {
 // CREATE
 export async function addService(req, res) {
   try {
-    const newService = await createService(req.body);
+    const newService = await createService(req.body, req.file);
     res.status(201).json(newService);
   } catch (err) {
     console.error(err);
@@ -43,7 +43,7 @@ export async function getService(req, res) {
 // UPDATE
 export async function editService(req, res) {
   try {
-    const updated = await updateService(req.params.id, req.body);
+    const updated = await updateService(req.params.id, req.body, req.file);
     if (!updated) return res.status(404).json({ error: 'Serviço não encontrado' });
     res.json(updated);
   } catch (err) {

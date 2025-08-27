@@ -2,8 +2,12 @@ import { pool } from '../config/db.js';
 
 
 // CREATE
-export async function createService(data) {
-  const { type, title, subtitle, price, time, description, imageUrl } = data;
+export async function createService(data, file) {
+  const { type, title, subtitle, price, time, description } = data;
+
+  // pega a URL única da imagem
+  const imageUrl = file ? file.path : null;
+
   const result = await pool.query(
     `INSERT INTO services 
       (type, title, subtitle, price, time, description, image_url, created_at, updated_at)
@@ -78,11 +82,16 @@ export async function getServiceById(id) {
 }
 
 // UPDATE
-export async function updateService(id, data) {
-  const { type, title, subtitle, price, time, description, imageUrl } = data;
+export async function updateService(id, data, file) {
+  const { type, title, subtitle, price, time, description } = data;
+
+  // só atualiza a imagem se vier nova
+  const imageUrl = file ? file.path : null;
+
   const result = await pool.query(
     `UPDATE services
-     SET type = $1, title = $2, subtitle = $3, price = $4, time = $5, description = $6, image_url = $7, updated_at = NOW()
+     SET type = $1, title = $2, subtitle = $3, price = $4, time = $5, description = $6,
+         image_url = COALESCE($7, image_url), updated_at = NOW()
      WHERE id = $8 AND deleted_at IS NULL
      RETURNING *`,
     [type, title, subtitle, price, time, description, imageUrl, id]
