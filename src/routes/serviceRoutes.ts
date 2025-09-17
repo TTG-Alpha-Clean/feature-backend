@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { verifyToken } from '../middlewares/auth.js';
+import { verifyToken } from '../middlewares/auth';
 import {
   addService, listServices, getService, editService, removeService
-} from '../controllers/serviceControllers.js';
-import upload from '../middlewares/upload.js';
+} from '../controllers/serviceControllers';
+import upload from '../middlewares/upload';
 const router = Router();
 
 router.get('/', listServices);

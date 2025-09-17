@@ -1,11 +1,22 @@
-import { pool } from '../config/db.js';
+import { pool } from '../config/db';
 
+// Interface parcial para os dados do serviço
+interface ServiceData {
+  type?: string;
+  title?: string;
+  subtitle?: string;
+  price?: number;
+  time?: string;
+  description?: string;
+  [key: string]: any;
+}
 
 // CREATE
-export async function createService(data, file) {
+export async function createService(
+  data: ServiceData,
+  file?: Express.Multer.File
+): Promise<any> {
   const { type, title, subtitle, price, time, description } = data;
-
-  // pega a URL única da imagem
   const imageUrl = file ? file.path : null;
 
   const result = await pool.query(
@@ -15,11 +26,12 @@ export async function createService(data, file) {
      RETURNING *`,
     [type, title, subtitle, price, time, description, imageUrl]
   );
+
   return result.rows[0];
 }
 
 // READ - todos
-export async function getAllServices() {
+export async function getAllServices(): Promise<any[]> {
   const result = await pool.query(`
     SELECT 
       s.id AS service_id,
@@ -47,12 +59,14 @@ export async function getAllServices() {
     GROUP BY s.id
     ORDER BY s.id;
   `);
+
   return result.rows;
 }
 
 // READ - por ID
-export async function getServiceById(id) {
-  const result = await pool.query(`
+export async function getServiceById(id: number): Promise<any | null> {
+  const result = await pool.query(
+    `
     SELECT 
       s.id AS service_id,
       s.type,
@@ -77,15 +91,20 @@ export async function getServiceById(id) {
     LEFT JOIN informations i ON s.id = i.id_service
     WHERE s.id = $1 AND s.deleted_at IS NULL
     GROUP BY s.id;
-  `, [id]);
+  `,
+    [id]
+  );
+
   return result.rows[0] || null;
 }
 
 // UPDATE
-export async function updateService(id, data, file) {
+export async function updateService(
+  id: number,
+  data: ServiceData,
+  file?: Express.Multer.File
+): Promise<any | null> {
   const { type, title, subtitle, price, time, description } = data;
-
-  // só atualiza a imagem se vier nova
   const imageUrl = file ? file.path : null;
 
   const result = await pool.query(
@@ -96,20 +115,16 @@ export async function updateService(id, data, file) {
      RETURNING *`,
     [type, title, subtitle, price, time, description, imageUrl, id]
   );
+
   return result.rows[0] || null;
 }
 
 // DELETE
-export async function deleteService(id) {
+export async function deleteService(id: number): Promise<any | null> {
   const result = await pool.query(
     `DELETE FROM services WHERE id = $1 RETURNING *`,
     [id]
   );
+
   return result.rows[0] || null;
 }
-
-
-
-
-
-

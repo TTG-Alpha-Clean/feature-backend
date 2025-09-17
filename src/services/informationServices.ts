@@ -1,18 +1,25 @@
-import { pool } from "../config/db.js";
+import { pool } from '../config/db';
 
 // CREATE
-export async function createInformation(id_service, description) {
+export async function createInformation(
+  id_service: number,
+  description: string
+): Promise<any> {
   const result = await pool.query(
     `INSERT INTO informations (id_service, description, created_at, updated_at)
      VALUES ($1, $2, NOW(), NOW())
      RETURNING *`,
     [id_service, description]
   );
+
   return result.rows[0];
 }
 
 // UPDATE
-export async function updateInformation(id, description) {
+export async function updateInformation(
+  id: number,
+  description: string
+): Promise<any> {
   const result = await pool.query(
     `UPDATE informations
      SET description = $1, updated_at = NOW()
@@ -20,5 +27,6 @@ export async function updateInformation(id, description) {
      RETURNING *`,
     [description, id]
   );
+
   return result.rows[0];
 }

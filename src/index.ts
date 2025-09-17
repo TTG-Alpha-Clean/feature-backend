@@ -3,9 +3,9 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import 'dotenv/config';
 
-import serviceRoutes from './routes/serviceRoutes.js'; 
-import adminRoutes from './routes/adminRoutes.js';
-import informationRoutes from './routes/informationRoutes.js'
+import serviceRoutes from './routes/serviceRoutes'; 
+import adminRoutes from './routes/adminRoutes';
+import informationRoutes from './routes/informationRoutes'
 
 const app = express();
 const PORT = process.env.PORT || 3000;

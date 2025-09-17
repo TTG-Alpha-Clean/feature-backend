@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { adminLogin, adminLogout } from '../controllers/adminControllers.js';
+import { adminLogin, adminLogout } from '../controllers/adminControllers';
 
 const router = Router();
 router.post('/login', adminLogin);
