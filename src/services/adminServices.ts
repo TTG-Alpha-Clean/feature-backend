@@ -2,10 +2,10 @@ import { pool } from '../config/db';
 import bcrypt from 'bcrypt';
 import jwt, { JwtPayload, SignOptions, Secret } from 'jsonwebtoken';
 
-export async function loginAdmin(username: string, password: string): Promise<any> {
+export async function loginAdmin(email: string, senha: string): Promise<any> {
   const { rows } = await pool.query(
     'SELECT id, username, password FROM admin_users WHERE username = $1 LIMIT 1',
-    [username]
+    [email]
   );
 
   if (!rows.length) {
@@ -13,7 +13,7 @@ export async function loginAdmin(username: string, password: string): Promise<an
   }
 
   const admin = rows[0];
-  const isMatch = await bcrypt.compare(password, admin.password);
+  const isMatch = await bcrypt.compare(senha, admin.password);
   if (!isMatch) {
     return { ok: false, status: 401, msg: 'Credenciais inválidas.' };
   }
@@ -46,4 +46,7 @@ export async function loginAdmin(username: string, password: string): Promise<an
       username: admin.username
     }
   };
+
 }
+
+
