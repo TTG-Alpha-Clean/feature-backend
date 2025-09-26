@@ -1,5 +1,6 @@
 import { pool } from '../config/db';
 
+
 // Interface parcial para os dados do serviço
 interface ServiceData {
   type?: string;
